@@ -8,21 +8,18 @@ import com.whisk.docker.specs2.DockerTestKit
 import fokot.scala.second.model.Color
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
-import org.specs2.specification.{AfterAll, BeforeAll}
 import slick.jdbc.PostgresProfile.api._
 
-import scala.concurrent.Await
-
 trait DockerPostgresService extends DockerKitSpotify {
-
+  import scala.concurrent.duration._
   val db = ConfigFactory.load().getConfig("postgres")
   def PostgresAdvertisedPort = "\\d+".r.findFirstIn(db.getString("url")).get.toInt
+  def DbName = db.getString("url").substring(db.getString("url").lastIndexOf("/") + 1)
   val postgresContainer = DockerContainer("postgres:9.5")
     .withPorts((5432, Some(PostgresAdvertisedPort)))
     .withEnv(s"POSTGRES_USER=${db.getString("user")}", s"POSTGRES_PASSWORD=${db.getString("password")}")
     .withReadyChecker(
-      DockerReadyChecker
-        .LogLineContains("database system is ready to accept connections")
+      new PostgresReadyChecker(DbName, db.getString("user"), db.getString("password")).looped(10, 1 second)
     )
 
   abstract override def dockerContainers: List[DockerContainer] =
@@ -34,13 +31,6 @@ class CatRepositorySlickTest extends Specification with DockerPostgresService wi
   import fokot.docker.scala.model.Db._
 
   "should save things to db and read them" >> {  implicit ee: ExecutionEnv =>
-
-    import scala.concurrent.duration._
-
-    Await.result(isContainerReady(postgresContainer), 10.seconds)
-
-    Thread.sleep(5000)
-    println("zobudeny")
 
     val db = Database.forConfig("postgres")
 
