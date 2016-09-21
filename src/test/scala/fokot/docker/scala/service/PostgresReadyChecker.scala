@@ -14,7 +14,12 @@ class PostgresReadyChecker(dbname: String, username: String, password: String) e
       Try {
         Class.forName("org.postgresql.Driver")
         val connection = DriverManager.getConnection(s"jdbc:postgresql://${docker.host}:$port/$dbname", username, password)
-        connection != null
+        if (connection != null) {
+          connection.close()
+          true
+        } else {
+          false
+        }
       }.getOrElse(false)
     )
 }
