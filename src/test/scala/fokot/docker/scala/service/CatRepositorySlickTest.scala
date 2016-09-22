@@ -12,14 +12,19 @@ import slick.jdbc.PostgresProfile.api._
 
 trait DockerPostgresService extends DockerKitSpotify {
   import scala.concurrent.duration._
+
   val db = ConfigFactory.load().getConfig("postgres")
-  def PostgresAdvertisedPort = "\\d+".r.findFirstIn(db.getString("url")).get.toInt
-  def DbName = db.getString("url").substring(db.getString("url").lastIndexOf("/") + 1)
+  val Url = db.getString("url")
+  val PostgresAdvertisedPort = "\\d+".r.findFirstIn(Url).get.toInt
+  val DbName = Url.substring(Url.lastIndexOf("/") + 1)
+  val User = db.getString("user")
+  val Password = db.getString("password")
+
   val postgresContainer = DockerContainer("postgres:9.5")
     .withPorts((5432, Some(PostgresAdvertisedPort)))
-    .withEnv(s"POSTGRES_USER=${db.getString("user")}", s"POSTGRES_PASSWORD=${db.getString("password")}")
+    .withEnv(s"POSTGRES_USER=$User", s"POSTGRES_PASSWORD=$Password")
     .withReadyChecker(
-      new PostgresReadyChecker(DbName, db.getString("user"), db.getString("password")).looped(10, 1 second)
+      new PostgresReadyChecker(DbName, User, Password, Some(PostgresAdvertisedPort)).looped(10, 1 second)
     )
 
   abstract override def dockerContainers: List[DockerContainer] =

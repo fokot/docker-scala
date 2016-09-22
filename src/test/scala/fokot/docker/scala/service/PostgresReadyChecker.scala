@@ -7,19 +7,16 @@ import com.whisk.docker.{DockerCommandExecutor, DockerContainerState, DockerRead
 import scala.concurrent.ExecutionContext
 import scala.util.Try
 
-class PostgresReadyChecker(dbname: String, username: String, password: String) extends DockerReadyChecker {
+class PostgresReadyChecker(dbname: String, username: String, password: String, port: Option[Int] = None) extends DockerReadyChecker {
 
   override def apply(container: DockerContainerState)(implicit docker: DockerCommandExecutor, ec: ExecutionContext) =
-    container.getPorts().map(x => x.values.head).map(port =>
+    container.getPorts().map(ports =>
       Try {
         Class.forName("org.postgresql.Driver")
-        val connection = DriverManager.getConnection(s"jdbc:postgresql://${docker.host}:$port/$dbname", username, password)
-        if (connection != null) {
-          connection.close()
-          true
-        } else {
-          false
-        }
+        val url = s"jdbc:postgresql://${docker.host}:${port.getOrElse(ports.values.head)}/$dbname"
+        Option(DriverManager.getConnection(url, username, password))
+          .map(_.close)
+          .isDefined
       }.getOrElse(false)
     )
 }
