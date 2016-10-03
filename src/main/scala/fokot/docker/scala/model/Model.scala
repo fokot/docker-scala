@@ -5,4 +5,4 @@ object Color extends Enumeration {
   val black, white, grey, green, red = Value
 }
 
-case class Cat(id: Option[Long], name: String, color: Color.Color)
+case class Cat(id: Long, name: String, color: Color.Color)

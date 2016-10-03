@@ -1,11 +1,11 @@
 package fokot.docker.scala.service
 
-
 import com.typesafe.config.ConfigFactory
 import com.whisk.docker._
 import com.whisk.docker.impl.spotify.DockerKitSpotify
 import com.whisk.docker.specs2.DockerTestKit
-import fokot.scala.second.model.Color
+import fokot.docker.scala.model.DAO
+import fokot.scala.second.model.{Cat, Color}
 import org.specs2.concurrent.ExecutionEnv
 import org.specs2.mutable.Specification
 import slick.jdbc.PostgresProfile.api._
@@ -33,24 +33,18 @@ trait DockerPostgresService extends DockerKitSpotify {
 
 class CatRepositorySlickTest extends Specification with DockerPostgresService with DockerTestKit {
 
-  import fokot.docker.scala.model.Db._
-
   "should save things to db and read them" >> {  implicit ee: ExecutionEnv =>
 
     val db = Database.forConfig("postgres")
+    val dao = new DAO(db)
 
-    val setup = DBIO.seq(
-      // Create the tables, including primary and foreign keys
-//      cats.schema.drop,
-      cats.schema.create,
 
-      // Insert some suppliers
-      cats += (Some(1), "Micka", Color.white),
-      cats += (Some(2), "Cicka", Color.grey),
-      cats += (Some(3), "Paulina", Color.black)
-    )
-    db.run(setup) must throwAn[Exception].not.await
-    db.run(cats.countDistinct.result) must equalTo(3).await
+    db.run(dao.schema.create) must throwAn[Exception].not.await
+
+    dao.create(Cat(0, "Micka", Color.white))
+    dao.create(Cat(0, "Cicka", Color.grey))
+    dao.create(Cat(0, "Paulina", Color.black))
+    dao.findAll.map(_.size)(ee.executionContext) must equalTo(3).await
   }
 
 }
