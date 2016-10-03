@@ -31,7 +31,7 @@ trait DockerPostgresService extends DockerKitSpotify {
     postgresContainer :: super.dockerContainers
 }
 
-class CatRepositorySlickTest extends Specification with DockerPostgresService with DockerTestKit {
+class DAOTest extends Specification with DockerPostgresService with DockerTestKit {
 
   "should save things to db and read them" >> {  implicit ee: ExecutionEnv =>
 
