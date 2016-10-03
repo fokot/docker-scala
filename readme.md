@@ -2,6 +2,8 @@
 
 # Docker-scala
 
-Testting scala application with docker dependencies. Also in Travis-ci.
+Testing scala application with docker dependencies. Also in Travis-ci.
 
-Look at CatRepositorySlickTest which has Postgres as docker dependency. Postgres database is started before tests and shut down after.
+Docker integration is done by [docker-it-scala](https://github.com/whisklabs/docker-it-scala) and [Spotify's docker-client ](https://github.com/spotify/docker-client)
+
+Look at DAOTest which has Postgres as docker dependency. Postgres database is started before tests and shut down after.
