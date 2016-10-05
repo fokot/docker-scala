@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
 
 mainClass in Compile := Some("fokot.docker.scala.main.Main")
 
-test in assembly := {}
+//test in assembly := {}
 
 imageNames in docker := Seq(
   // Sets the latest tag
