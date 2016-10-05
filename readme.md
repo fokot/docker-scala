@@ -16,9 +16,9 @@ To build docker image [sbt-docker](https://github.com/marcuslonnberg/sbt-docker)
 It starts docker container on port 8080 witch runs for 1 hour. To test it do
 
   
-  sbt docker
-  docker run -p 80:8080 default/docker-scala
-  open http://localhost/hello
+    sbt docker
+    docker run -p 80:8080 default/docker-scala
+    open http://localhost/hello
 
 Test in assembly were disabled (idk why they don't run but run in `sbt test`).
 
