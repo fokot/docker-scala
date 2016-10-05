@@ -6,6 +6,8 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
+organization := "com.fokot"
+
 libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4.1210",
   "com.typesafe.slick" % "slick_2.11" % "3.2.0-M1",
@@ -18,6 +20,18 @@ libraryDependencies ++= Seq(
 mainClass in Compile := Some("fokot.docker.scala.main.Main")
 
 test in assembly := {}
+
+imageNames in docker := Seq(
+  // Sets the latest tag
+  ImageName(s"${organization.value}/${name.value}:latest"),
+
+  // Sets a name with a tag that contains the project version
+  ImageName(
+    namespace = Some(organization.value),
+    repository = name.value,
+    tag = Some("v" + version.value)
+  )
+)
 
 dockerfile in docker := {
   // The assembly task generates a fat JAR file
