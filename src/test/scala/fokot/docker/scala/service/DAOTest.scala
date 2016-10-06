@@ -44,7 +44,7 @@ class DAOTest extends Specification with DockerPostgresService with DockerTestKi
     dao.create(Cat(0, "Micka", Color.white))
     dao.create(Cat(0, "Cicka", Color.grey))
     dao.create(Cat(0, "Paulina", Color.black))
-    dao.findAll.map(_.size)(ee.executionContext) must equalTo(33).await
+    dao.findAll.map(_.size)(ee.executionContext) must equalTo(3).await
   }
 
 }
