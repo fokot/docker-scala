@@ -1,8 +1,11 @@
 sudo: required
-
 services:
-  - docker
-
+- docker
 language: scala
 scala:
-   - 2.11.8
+- 2.11.8
+env:
+  global:
+    secure: cEt9D+ipMGQa5zsgnVZGHSykLRL19eDPChOtc5jJyOyiupP2w0Kfg8FfVf/i6IFc0D896gQg6rinAgL8LCl5mn77c+FjmrXPzuzIUl3Z6ffK+khAmScDdPSzgBc4o2njKFGi92o4qa30AGU3e6HwQegQaq+YGiAPMNLd1axtKnZ8wT95NTCJLTgl6uERRc4A+saIqPLorn7kdfLrzwYs1F1lQEoLB/j3z7NuXseOunqoqfjfvdkB+t+zTHi+kGJIWPuW1yV1Z7Fae3glKZSO0Llmn+lBhw0IqAzuqGVsU5GRri/VvV/BWps4VXqVp1uKIpGhWerZp+Ei7S5H8qXFDDk4ZYE+Iv+w76e6Lo2EgDA6TVP5t9gsmIl5wHso1109RPTv+nPQH1jNFPWn11EKOsO18AAfVSg6jFQzrQKYWo+dTmn2++/MM0BLZSc071clRvOEtnUd2dcjFyhyL75WjXdBQFqDmcMPMGE5wPUf6z6Pac/e8/3LhKdOh+ltL+Zq/IjcIIIQEg1w8haadoa+jwsJU/mNHbzqZAi/QUcFgDS6QVlJm1l+qbcp4S12lzVlsy3HimhbG0rvS/Uw+R+uxaJ0DL60y7a12d3wfhZlA5a7kqflxkm0gyn/1Dmtz+CzgkPRQW7x5t/YcmWlMV/3IKPzLw9QvKCl3HhzdZ0Bhfw=
+
+script: docker login -u fokot -p $DOCKERHUB_PWD && sbt dockerBuildAndPush

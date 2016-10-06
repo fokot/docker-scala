@@ -2,11 +2,11 @@ enablePlugins(DockerPlugin)
 
 name := "docker-scala"
 
-version := "1.0"
+version := "1.2"
 
 scalaVersion := "2.11.8"
 
-organization := "com.fokot"
+organization := "fokot"
 
 libraryDependencies ++= Seq(
   "org.postgresql" % "postgresql" % "9.4.1210",
